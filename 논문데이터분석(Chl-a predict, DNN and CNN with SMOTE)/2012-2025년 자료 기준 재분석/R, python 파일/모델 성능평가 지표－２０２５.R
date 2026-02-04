@@ -1,0 +1,151 @@
+res_SC <- read.csv("C:/Users/User/Desktop/df_SC_res_2025.csv",
+                   sep=",",header=T)
+res_JS <- read.csv("C:/Users/User/Desktop/df_JS_res_2025.csv",
+                   sep=",",header=T)
+
+RMSE <- function(y, yhat) {sqrt(sum((y-yhat)^2)/length(y))}
+MAE <- function(y, yhat) {sum(abs(y-yhat))/length(y)}
+MAPE <- function(y, yhat) {sum(abs((y-yhat)/y))*100/length(y)}
+NMB <- function(y, yhat) {100*sum((y-yhat)/y)}
+IOA <- function(y, yhat) {1-(sum((y-yhat)^2))/(sum((abs(yhat-mean(y))+abs(y-mean(y)))^2))} 
+
+
+RMSE(res_SC$Chla, res_SC$DNN)
+RMSE(res_SC$Chla, res_SC$DNN_SMOTE)
+RMSE(res_SC$Chla, res_SC$DNN_ADASYN)
+RMSE(res_SC$Chla, res_SC$DNN_SMOTE_ENN)
+RMSE(res_SC$Chla, res_SC$DNN_SMOTE_Tomek)
+RMSE(res_SC$Chla, res_SC$CNN)
+RMSE(res_SC$Chla, res_SC$CNN_SMOTE)
+RMSE(res_SC$Chla, res_SC$CNN_ADASYN)
+RMSE(res_SC$Chla, res_SC$CNN_SMOTE_ENN)
+RMSE(res_SC$Chla, res_SC$CNN_SMOTE_Tomek)
+RMSE(res_SC$Chla, res_SC$RNN)
+RMSE(res_SC$Chla, res_SC$LSTM)
+
+
+RMSE(res_JS$Chla, res_JS$DNN)
+RMSE(res_JS$Chla, res_JS$DNN_SMOTE)
+RMSE(res_JS$Chla, res_JS$DNN_ADASYN)
+RMSE(res_JS$Chla, res_JS$DNN_SMOTE_ENN)
+RMSE(res_JS$Chla, res_JS$DNN_SMOTE_Tomek)
+RMSE(res_JS$Chla, res_JS$CNN)
+RMSE(res_JS$Chla, res_JS$CNN_SMOTE)
+RMSE(res_JS$Chla, res_JS$CNN_ADASYN)
+RMSE(res_JS$Chla, res_JS$CNN_SMOTE_ENN)
+RMSE(res_JS$Chla, res_JS$CNN_SMOTE_Tomek)
+RMSE(res_JS$Chla, res_JS$RNN)
+RMSE(res_JS$Chla, res_JS$LSTM)
+
+
+
+MAE(res_SC$Chla, res_SC$DNN)
+MAE(res_SC$Chla, res_SC$DNN_SMOTE)
+MAE(res_SC$Chla, res_SC$DNN_ADASYN)
+MAE(res_SC$Chla, res_SC$DNN_SMOTE_ENN)
+MAE(res_SC$Chla, res_SC$DNN_SMOTE_Tomek)
+MAE(res_SC$Chla, res_SC$CNN)
+MAE(res_SC$Chla, res_SC$CNN_SMOTE)
+MAE(res_SC$Chla, res_SC$CNN_ADASYN)
+MAE(res_SC$Chla, res_SC$CNN_SMOTE_ENN)
+MAE(res_SC$Chla, res_SC$CNN_SMOTE_Tomek)
+MAE(res_SC$Chla, res_SC$RNN)
+MAE(res_SC$Chla, res_SC$LSTM)
+
+
+MAE(res_JS$Chla, res_JS$DNN)
+MAE(res_JS$Chla, res_JS$DNN_SMOTE)
+MAE(res_JS$Chla, res_JS$DNN_ADASYN)
+MAE(res_JS$Chla, res_JS$DNN_SMOTE_ENN)
+MAE(res_JS$Chla, res_JS$DNN_SMOTE_Tomek)
+MAE(res_JS$Chla, res_JS$CNN)
+MAE(res_JS$Chla, res_JS$CNN_SMOTE)
+MAE(res_JS$Chla, res_JS$CNN_ADASYN)
+MAE(res_JS$Chla, res_JS$CNN_SMOTE_ENN)
+MAE(res_JS$Chla, res_JS$CNN_SMOTE_Tomek)
+MAE(res_JS$Chla, res_JS$RNN)
+MAE(res_JS$Chla, res_JS$LSTM)
+
+
+MAPE(res_SC$Chla, res_SC$DNN)
+MAPE(res_SC$Chla, res_SC$DNN_SMOTE)
+MAPE(res_SC$Chla, res_SC$DNN_ADASYN)
+MAPE(res_SC$Chla, res_SC$DNN_SMOTE_ENN)
+MAPE(res_SC$Chla, res_SC$DNN_SMOTE_Tomek)
+MAPE(res_SC$Chla, res_SC$CNN)
+MAPE(res_SC$Chla, res_SC$CNN_SMOTE)
+MAPE(res_SC$Chla, res_SC$CNN_ADASYN)
+MAPE(res_SC$Chla, res_SC$CNN_SMOTE_ENN)
+MAPE(res_SC$Chla, res_SC$CNN_SMOTE_Tomek)
+MAPE(res_SC$Chla, res_SC$RNN)
+MAPE(res_SC$Chla, res_SC$LSTM)
+
+
+MAPE(res_JS$Chla, res_JS$DNN)
+MAPE(res_JS$Chla, res_JS$DNN_SMOTE)
+MAPE(res_JS$Chla, res_JS$DNN_ADASYN)
+MAPE(res_JS$Chla, res_JS$DNN_SMOTE_ENN)
+MAPE(res_JS$Chla, res_JS$DNN_SMOTE_Tomek)
+MAPE(res_JS$Chla, res_JS$CNN)
+MAPE(res_JS$Chla, res_JS$CNN_SMOTE)
+MAPE(res_JS$Chla, res_JS$CNN_ADASYN)
+MAPE(res_JS$Chla, res_JS$CNN_SMOTE_ENN)
+MAPE(res_JS$Chla, res_JS$CNN_SMOTE_Tomek)
+MAPE(res_JS$Chla, res_JS$RNN)
+MAPE(res_JS$Chla, res_JS$LSTM)
+
+
+NMB(res_SC$Chla, res_SC$DNN)
+NMB(res_SC$Chla, res_SC$DNN_SMOTE)
+NMB(res_SC$Chla, res_SC$DNN_ADASYN)
+NMB(res_SC$Chla, res_SC$DNN_SMOTE_ENN)
+NMB(res_SC$Chla, res_SC$DNN_SMOTE_Tomek)
+NMB(res_SC$Chla, res_SC$CNN)
+NMB(res_SC$Chla, res_SC$CNN_SMOTE)
+NMB(res_SC$Chla, res_SC$CNN_ADASYN)
+NMB(res_SC$Chla, res_SC$CNN_SMOTE_ENN)
+NMB(res_SC$Chla, res_SC$CNN_SMOTE_Tomek)
+NMB(res_SC$Chla, res_SC$RNN)
+NMB(res_SC$Chla, res_SC$LSTM)
+
+
+NMB(res_JS$Chla, res_JS$DNN)
+NMB(res_JS$Chla, res_JS$DNN_SMOTE)
+NMB(res_JS$Chla, res_JS$DNN_ADASYN)
+NMB(res_JS$Chla, res_JS$DNN_SMOTE_ENN)
+NMB(res_JS$Chla, res_JS$DNN_SMOTE_Tomek)
+NMB(res_JS$Chla, res_JS$CNN)
+NMB(res_JS$Chla, res_JS$CNN_SMOTE)
+NMB(res_JS$Chla, res_JS$CNN_ADASYN)
+NMB(res_JS$Chla, res_JS$CNN_SMOTE_ENN)
+NMB(res_JS$Chla, res_JS$CNN_SMOTE_Tomek)
+NMB(res_JS$Chla, res_JS$RNN)
+NMB(res_JS$Chla, res_JS$LSTM)
+
+
+IOA(res_SC$Chla, res_SC$DNN)
+IOA(res_SC$Chla, res_SC$DNN_SMOTE)
+IOA(res_SC$Chla, res_SC$DNN_ADASYN)
+IOA(res_SC$Chla, res_SC$DNN_SMOTE_ENN)
+IOA(res_SC$Chla, res_SC$DNN_SMOTE_Tomek)
+IOA(res_SC$Chla, res_SC$CNN)
+IOA(res_SC$Chla, res_SC$CNN_SMOTE)
+IOA(res_SC$Chla, res_SC$CNN_ADASYN)
+IOA(res_SC$Chla, res_SC$CNN_SMOTE_ENN)
+IOA(res_SC$Chla, res_SC$CNN_SMOTE_Tomek)
+IOA(res_SC$Chla, res_SC$RNN)
+IOA(res_SC$Chla, res_SC$LSTM)
+
+
+IOA(res_JS$Chla, res_JS$DNN)
+IOA(res_JS$Chla, res_JS$DNN_SMOTE)
+IOA(res_JS$Chla, res_JS$DNN_ADASYN)
+IOA(res_JS$Chla, res_JS$DNN_SMOTE_ENN)
+IOA(res_JS$Chla, res_JS$DNN_SMOTE_Tomek)
+IOA(res_JS$Chla, res_JS$CNN)
+IOA(res_JS$Chla, res_JS$CNN_SMOTE)
+IOA(res_JS$Chla, res_JS$CNN_ADASYN)
+IOA(res_JS$Chla, res_JS$CNN_SMOTE_ENN)
+IOA(res_JS$Chla, res_JS$CNN_SMOTE_Tomek)
+IOA(res_JS$Chla, res_JS$RNN)
+IOA(res_JS$Chla, res_JS$LSTM)
