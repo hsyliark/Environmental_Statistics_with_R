@@ -225,3 +225,36 @@ unknown_preds_xgb <- train_and_predict_ml("XGB", X_train, Y_train, unknown_sampl
 
 cat("\n=== [미지 시료 오염원 기여율 추정 (XGBoost)] ===\n")
 print(round(unknown_preds_xgb, 4))
+
+
+
+
+# ---------------------------------------------------------
+# 3-1. 실제 미지 시료(CSV 파일) 불러오기 및 예측
+# ---------------------------------------------------------
+# (주의) 워킹 디렉토리에 'unknown_data.csv' 파일이 있다고 가정합니다.
+# 파일 경로는 실제 파일이 있는 위치로 지정해주세요. (예: "C:/data/unknown_data.csv")
+
+# CSV 파일 불러오기
+unknown_samples_df <- read.csv("unknown_data.csv", header = TRUE)
+
+# 분석에 필요한 독립변수(Feature)만 추출하여 행렬(matrix)로 변환
+# ★중요: 학습 데이터(X_train)에 사용된 변수명 및 순서와 정확히 일치해야 합니다.
+unknown_matrix <- as.matrix(unknown_samples_df[, c("d15N", "d18O", "Cl", "TOC")])
+
+# 불러온 미지 시료 전체를 대상으로 모델(예: XGBoost) 예측 수행
+unknown_preds_xgb <- train_and_predict_ml("XGB", X_train, Y_train, unknown_matrix)
+
+cat("\n=== [실제 미지 시료 오염원 기여율 추정 결과 (XGBoost)] ===\n")
+# 가독성을 위해 소수점 4자리까지 반올림
+final_results <- round(unknown_preds_xgb, 4)
+
+# 원본 데이터에 예측된 기여율 결과를 새로운 열(Column)로 병합
+# 이렇게 하면 각 시료별(지점별/날짜별) 특성과 기여율을 한눈에 확인할 수 있습니다.
+final_output_df <- cbind(unknown_samples_df, final_results)
+
+# 결과 확인 (상위 6개 행만 출력)
+print(head(final_output_df))
+
+# 필요하다면 최종 결과를 다시 CSV 파일로 내보내어 엑셀에서 확인 가능
+write.csv(final_output_df, "final_prediction_results.csv", row.names = FALSE)
