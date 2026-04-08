@@ -1,22 +1,22 @@
 library(MixSIAR)
 
 # Load mix data
-mix <- load_mix_data(filename="C:/Users/User/Desktop/R MixSIAR 분석결과 정리_영산강/2024 환경기초조사사업 관련/BIMM 적합결과/7차 분석/ver1/Jiseok2024_consumer_ver1_site.csv",
-                     iso_names=c("BIX","FI"),
-                     factors=c("site"),
+mix <- load_mix_data(filename="C:/Users/User/Desktop/compare2024_consumer.csv",
+                     iso_names=c("N_15","O_18"),
+                     factors=c("No"),
                      fac_random=c(FALSE),
                      fac_nested=c(FALSE),
                      cont_effects=NULL)
 
 # Load source data
-source <- load_source_data(filename="C:/Users/User/Desktop/R MixSIAR 분석결과 정리_영산강/2024 환경기초조사사업 관련/BIMM 적합결과/7차 분석/ver1/Jiseok2024_sources_raw_ver1.csv",
+source <- load_source_data(filename="C:/Users/User/Desktop/compare2024_sources_raw.csv",
                            source_factors=NULL,
                            conc_dep=FALSE,
                            data_type="raw",
                            mix)
 
 # Load discrimination/TDF data
-discr <- load_discr_data(filename="C:/Users/User/Desktop/R MixSIAR 분석결과 정리_영산강/2024 환경기초조사사업 관련/BIMM 적합결과/7차 분석/ver1/Jiseok2024_discrimination_no_ver1.csv", 
+discr <- load_discr_data(filename="C:/Users/User/Desktop/compare2024_discrimination_no.csv", 
                          mix)
 
 # Make isospace plot
