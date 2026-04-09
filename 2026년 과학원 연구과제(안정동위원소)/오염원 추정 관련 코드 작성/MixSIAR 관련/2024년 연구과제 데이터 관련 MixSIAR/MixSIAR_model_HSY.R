@@ -1,7 +1,7 @@
 library(MixSIAR)
 
 # Load mix data
-mix <- load_mix_data(filename="C:/Users/User/Desktop/compare2024_consumer.csv",
+mix <- load_mix_data(filename="C:/Users/User/Desktop/compare2024_consumer_rain_before.csv",
                      iso_names=c("N_15","O_18"),
                      factors=c("No"),
                      fac_random=c(FALSE),
