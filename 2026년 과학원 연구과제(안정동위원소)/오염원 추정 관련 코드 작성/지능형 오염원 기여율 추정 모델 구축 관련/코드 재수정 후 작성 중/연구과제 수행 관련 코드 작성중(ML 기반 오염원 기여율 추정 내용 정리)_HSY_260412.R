@@ -116,6 +116,53 @@ X_test  <- as.matrix(test_data[, 1:4])
 Y_test  <- as.matrix(test_data[, 5:9])
 
 # =====================================================================
+# [Step 1-1] SMOTE 적용을 통한 데이터 불균형 해소 (선택적 프로세스)
+# =====================================================================
+cat("\n=== [Step 1-1. SMOTE 기반 훈련 데이터 불균형 해소 (선택적 적용)] ===\n") 
+
+apply_smote_regression <- function(X_mat, Y_mat, k = 5) {
+  # 1. 각 샘플에서 가장 기여율이 높은 오염원을 지배 오염원(Dominant Source)으로 추출하여 임시 클래스로 지정
+  dominant_class <- as.factor(max.col(Y_mat))
+  
+  # 2. X(수질/동위원소)와 Y(기여율)를 하나의 데이터프레임으로 결합 (동시 보간 목적)
+  combined_data <- data.frame(X_mat, Y_mat)
+  
+  # 3. SMOTE 알고리즘 적용 (소수 클래스를 K-NN 기반으로 증폭)
+  smote_obj <- SMOTE(X = combined_data, target = dominant_class, K = k)
+  balanced_data <- smote_obj$data
+  
+  # 4. 결과에서 임시 클래스(마지막 열)를 제거하고 다시 X와 Y로 분리
+  n_total_cols <- ncol(balanced_data)
+  n_x_cols <- ncol(X_mat)
+  
+  new_X <- as.matrix(balanced_data[, 1:n_x_cols])
+  new_Y <- as.matrix(balanced_data[, (n_x_cols + 1):(n_total_cols - 1)])
+  
+  # 5. Y(기여율) 값의 총합이 1이 되도록 질량 수지(Mass Balance) 재정규화
+  new_Y[new_Y < 0] <- 0
+  pred_sum <- rowSums(new_Y)
+  new_Y_normalized <- new_Y / ifelse(pred_sum == 0, 1, pred_sum)
+  
+  colnames(new_X) <- colnames(X_mat)
+  colnames(new_Y_normalized) <- colnames(Y_mat)
+  
+  return(list(X = new_X, Y = new_Y_normalized))
+}
+
+# SMOTE 함수 테스트 구동 (훈련 데이터에 적용)
+smote_res <- apply_smote_regression(X_train, Y_train, k = 5)
+X_train_smote <- smote_res$X
+Y_train_smote <- smote_res$Y
+
+cat(sprintf("SMOTE 적용 전 Train 샘플 수: %d\n", nrow(X_train)))
+cat(sprintf("SMOTE 적용 후 Train 샘플 수: %d\n", nrow(X_train_smote)))
+
+# [주의] 실제 모델 학습 시 SMOTE로 증폭된 데이터를 사용하려면 아래의 주석을 해제하세요.
+# 현재는 가상 데이터의 양이 충분하므로 기본 데이터(X_train)를 그대로 사용하도록 설정되어 있습니다.
+# X_train <- X_train_smote
+# Y_train <- Y_train_smote
+
+# =====================================================================
 # [Step 2] 11종 통합 학습 및 예측 함수 (Standard ML + Advanced AI)
 # =====================================================================
 train_and_predict_master <- function(method, X_tr, Y_tr, X_te) {
