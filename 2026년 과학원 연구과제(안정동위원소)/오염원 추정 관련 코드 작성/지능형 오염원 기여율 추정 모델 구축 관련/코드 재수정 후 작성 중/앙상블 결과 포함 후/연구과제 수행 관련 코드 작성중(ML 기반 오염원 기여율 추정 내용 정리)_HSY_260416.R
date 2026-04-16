@@ -512,4 +512,8 @@ if (nrow(all_shap_importance) > 0) {
     coord_flip() +
     facet_grid(Method ~ Source, scales = "free_y") + 
     theme_bw() +
-    labs(title = "모든 모델 및 오염원별 SHAP 기여도 통합 분석", x = "수질 인자", y = "평균 절대 SHAP 값
+    labs(title = "모든 모델 및 오염원별 SHAP 기여도 통합 분석", x = "수질 인자", y = "평균 절대 SHAP 값")
+  
+  print(p)
+  write.csv(all_shap_importance, "Total_XAI_Importance_Results_Fixed.csv", row.names = FALSE)
+}
