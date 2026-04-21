@@ -1,6 +1,6 @@
-res_SC <- read.csv("C:/Users/User/Desktop/df_SC_res_2025.csv",
+res_SC <- read.csv("C:/Users/User/Desktop/df_SC_res_ver3_stand_2025.csv",
                    sep=",",header=T)
-res_JS <- read.csv("C:/Users/User/Desktop/df_JS_res_2025.csv",
+res_JS <- read.csv("C:/Users/User/Desktop/df_JS_res_ver3_stand_2025.csv",
                    sep=",",header=T)
 
 RMSE <- function(y, yhat) {sqrt(sum((y-yhat)^2)/length(y))}
