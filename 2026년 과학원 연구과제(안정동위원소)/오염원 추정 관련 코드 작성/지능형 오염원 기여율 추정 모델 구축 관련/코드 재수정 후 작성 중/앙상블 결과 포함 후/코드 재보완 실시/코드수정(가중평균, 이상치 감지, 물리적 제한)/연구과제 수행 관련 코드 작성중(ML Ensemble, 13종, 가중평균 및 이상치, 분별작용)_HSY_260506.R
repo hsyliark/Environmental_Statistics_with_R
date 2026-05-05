@@ -427,8 +427,8 @@ print(round(single_ens_sd, 4))
 # ---------------------------------------------------------------------
 cat("\n=== [4-2. CSV 미지 시료 배치 분석 및 가중 앙상블 결과 통합 저장] ===\n")
 
-if (file.exists("C:/Users/User/Desktop/compare2024_consumer_April_ML_AI.csv")) {
-  unknown_samples_df <- read.csv("C:/Users/User/Desktop/compare2024_consumer_April_ML_AI.csv", header = TRUE)
+if (file.exists("C:/Users/User/Desktop/sample data 1_HSY.csv")) {
+  unknown_samples_df <- read.csv("C:/Users/User/Desktop/sample data 1_HSY.csv", header = TRUE)
   unknown_matrix <- as.matrix(unknown_samples_df[, c("d15N", "d18O")])
   
   unknown_matrix_scaled <- scale(unknown_matrix, center = train_mean, scale = train_sd)
@@ -480,7 +480,7 @@ if (file.exists("C:/Users/User/Desktop/compare2024_consumer_April_ML_AI.csv")) {
 # ---------------------------------------------------------------------
 cat("\n=== [4-3. 고정/임의효과(그룹별) 오염원 기여율 패턴 분석 (가중 앙상블 포함)] ===\n")
 
-target_file <- "C:/Users/User/Desktop/compare2024_consumer_April_ML_AI.csv"
+target_file <- "C:/Users/User/Desktop/sample data 1_HSY.csv"
 
 if (file.exists(target_file)) {
   sample_df <- read.csv(target_file, header = TRUE)
