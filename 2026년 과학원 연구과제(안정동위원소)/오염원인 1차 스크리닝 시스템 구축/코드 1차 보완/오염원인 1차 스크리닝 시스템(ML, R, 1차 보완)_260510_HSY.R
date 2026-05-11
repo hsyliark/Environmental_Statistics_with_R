@@ -221,7 +221,7 @@ cluster_summary <- data %>%
 # [실행] 각 군집 행에 대해 10단계 판별 엔진 적용
 cluster_summary <- cluster_summary %>%
   rowwise() %>%
-  mutate(Source_Name = assign_source_universal(cur_data())) %>%
+  mutate(Source_Name = assign_source_universal(pick(everything()))) %>%
   ungroup()
 
 # [통합] 판별된 오염원 명칭을 개별 관측치 데이터프레임에 전파
