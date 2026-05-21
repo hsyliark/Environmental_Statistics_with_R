@@ -10,7 +10,7 @@
 # ==============================================================================
  
 # ------------------------------------------------------------------------------
-# 0. 초기 환경 구축 및 패키지 로드
+# 0. 초기 환경 구축 및 패키지 로드 
 # ------------------------------------------------------------------------------
 # [분석과정 및 방법론]
 # pacman을 통해 필요한 패키지들을 일괄 설치 및 로드합니다.
@@ -91,7 +91,12 @@ scaled_data <- scale(imputed_data) # 스케일링 (평균 0, 분산 1 변환)
 set.seed(SEED)
 n_rows <- nrow(scaled_data)
 # 군집 탐색 범위 설정 (데이터 수가 적을 경우 동적으로 조정)
-search_range <- if(n_rows < 9) 2:min(8, n_rows - 1) else 4:8
+max_k <- n_rows - 2
+if (max_k < 4) {
+  warning("전체 지점 수(spot)가 부족하여 계산된 최대 군집 수가 최소 기준(4)보다 작습니다. 범위를 4:4로 고정합니다.")
+  max_k <- 4
+}
+search_range <- 4:max_k
 
 # 2.1 최적 군집 수 탐색 (BIC, Silhouette, Gap Statistic 다수결)
 # [방법론] BIC, Silhouette, Gap Statistic 3가지 평가 지표의 다수결 적용
@@ -99,13 +104,13 @@ search_range <- if(n_rows < 9) 2:min(8, n_rows - 1) else 4:8
 gmm_auto <- Mclust(scaled_data, G = search_range)
 best_k_bic <- ifelse(!is.null(gmm_auto$G), gmm_auto$G, 4)
 
-if (n_rows > 4) {
-  dynamic_k_max <- min(8, n_rows - 1)
+if (n_rows > 5) { 
+  dynamic_k_max <- max_k
   sil_test <- fviz_nbclust(scaled_data, kmeans, method = "silhouette", k.max = dynamic_k_max)
-  best_k_sil <- max(4, min(as.numeric(sil_test$data$clusters[which.max(sil_test$data$y)]), 8))
+  best_k_sil <- max(4, min(as.numeric(sil_test$data$clusters[which.max(sil_test$data$y)]), max_k))
   
   gap_stat <- clusGap(scaled_data, FUN = kmeans, nstart = 25, K.max = dynamic_k_max, B = 50)
-  best_k_gap <- max(4, min(maxSE(gap_stat$Tab[, "gap"], gap_stat$Tab[, "SE.sim"], method="Tibs2001SEmax"), 8))
+  best_k_gap <- max(4, min(maxSE(gap_stat$Tab[, "gap"], gap_stat$Tab[, "SE.sim"], method="Tibs2001SEmax"), max_k))
 } else {
   best_k_sil <- 4; best_k_gap <- 4
 }
@@ -113,11 +118,11 @@ if (n_rows > 4) {
 # 다수결에 의한 최종 k 확정
 k_votes <- na.omit(c(best_k_bic, best_k_sil, best_k_gap))
 if (length(unique(k_votes)) == length(k_votes)) {
-  calculated_k <- round(median(k_votes))  # 또는 최빈값이 없으면 중앙값
+  calculated_k <- round(median(k_votes))  # 최빈값이 없으면 중앙값
 } else {
   calculated_k <- as.numeric(names(sort(table(k_votes), decreasing = TRUE)[1]))
 }
-best_k <- max(4, min(calculated_k, 8))
+best_k <- max(4, min(calculated_k, max_k))
 
 # 군집 안정성(Cluster Stability) 정량화
 # 본 cluster 구조가 다음주에 데이터 1개 추가되면 뒤집힐 정도로 불안정한지 확인
@@ -173,21 +178,21 @@ if (!is.null(posterior_probs)) {
 # 3. Bottcher, J., Strebel, O., Voerkelius, S., & Schmidt, H. L. (1990). Using isotope fractionation of nitrate-nitrogen and nitrate-oxygen for evaluation of microbial denitrification in a sandy aquifer. Journal of hydrology, 114(3-4), 413-424.
 # 4. Aravena, R., Evans, M. L., & Cherry, J. A. (1993). Stable isotopes of oxygen and nitrogen in source identification of nitrate from septic systems. Groundwater, 31(2), 180-186.
 # 5. Mayer, B., Boyer, E. W., Goodale, C., Jaworski, N. A., Van Breemen, N., Howarth, R. W., ... & Paustian, K. (2002). Sources of nitrate in rivers draining sixteen watersheds in the northeastern US: Isotopic constraints. Biogeochemistry, 57(1), 171-197.
-# 6. Elliott, E. M., Kendall, C., Wankel, S. D., Burns, D. A., Boyer, E. W., Harlin, K., ... & Butler, T. J. (2007). Nitrogen isotopes as indicators of NO x source contributions to atmospheric nitrate deposition across the midwestern and northeastern United States. Environmental Science & Technology, 41(22), 7661-7667.
+# 6. Elliott, E. M., Kendall, C., Wankel, S. D., Burns, D. A., Boyer, E. W., Harlin, K., ... & Butler, T. J. (2007). Nitrogen isotopes as indicators of NOx source contributions to atmospheric nitrate deposition across the midwestern and northeastern United States. Environmental Science & Technology, 41(22), 7661-7667.
 # 7. Widory, D., Petelet-Giraud, E., Negrel, P., & Ladouche, B. (2005). Tracking the sources of nitrate in groundwater using coupled nitrogen and boron isotopes: a synthesis. Environmental Science & Technology, 39(2), 539-548.
-# 8. Panno, S. V., Hackley, K. C., Hwang, H. H., Greenberg, S. E., Krapac, I. G., Landsberger, S., & O'kelly, D. J. (2006). Characterization and identification of Na???Cl sources in ground water. Groundwater, 44(2), 176-187.
+# 8. Panno, S. V., Hackley, K. C., Hwang, H. H., Greenberg, S. E., Krapac, I. G., Landsberger, S., & O'kelly, D. J. (2006). Characterization and identification of NaCl sources in ground water. Groundwater, 44(2), 176-187.
 # 9. Katz, B. G., Bohlke, J. K., & Hornsby, H. D. (2001). Timescales for nitrate contamination of spring waters, northern Florida, USA. Chemical Geology, 179(1-4), 167-186.
 # 10. Xue, Y., Song, J., Zhang, Y., Kong, F., Wen, M., & Zhang, G. (2016). Nitrate pollution and preliminary source identification of surface water in a Semi-Arid River Basin, using isotopic and hydrochemical approaches. Water, 8(8), 328.
 # 11. Gros, M., Petrovi??, M., & Barcelo, D. (2007). Wastewater treatment plants as a pathway for aquatic contamination by pharmaceuticals in the Ebro river basin (northeast Spain). Environmental toxicology and chemistry, 26(8), 1553-1562.
 # 12. Minet, E., Coxon, C. E., Goodhue, R., Richards, K. G., Kalin, R. M., & Meier-Augenstein, W. (2012). Evaluating the utility of 15N and 18O isotope abundance analyses to identify nitrate sources: A soil zone study. Water research, 46(12), 3723-3736.
-# 13. Koba, K., Fang, Y., Mo, J., Zhang, W., Lu, X., Liu, L., ... & Senoo, K. (2012). The 15N natural abundance of the N lost from an N???saturated subtropical forest in southern China. Journal of Geophysical Research: Biogeosciences, 117(G2).
-# 14. 김형석, 김정인, 이선홍, 최재원, & 김윤석. (2019). 수질 중 질산성질소의 질소 (δ15N) 와 산소 (δ18O) 안정동위원소비를 이용한상수원수의 오염원 추적. 환경분석과 독성보건, 22(3), 145-153.
+# 13. Koba, K., Fang, Y., Mo, J., Zhang, W., Lu, X., Liu, L., ... & Senoo, K. (2012). The 15N natural abundance of the N lost from an N-saturated subtropical forest in southern China. Journal of Geophysical Research: Biogeosciences, 117(G2).
+# 14. 김형석, 김정인, 이선홍, 최재원, & 김윤석. (2019). 수질 중 질산성질소의 질소 (δ15N) 와 산소 (δ18O) 안정동위원소비를 이용한 상수원수의 오염원 추적. 환경분석과 독성보건, 22(3), 145-153.
 # 15. 정영철, 이정엽, 최재원, & 김윤석. (2017). 산소 (δ18O) 와 질소 (δ15N) 안정동위원소비를 이용한 상수원의 오염원 분석. 환경분석과 독성보건, 20-29.
 # 16. 유지수, & 김윤석. (2021). 질소와 산소 안정동위원소비를 이용한 북한강수계 오염원 분포 특성 규명. 환경분석과 독성보건, 24(4), 164-170.
 # 17. Koh, D., & Mayer, B. (2009, December). Source identification of nitrate in groundwater using stable isotopes and Cl/Br ratios in an agricultural area. In AGU Fall Meeting Abstracts (Vol. 2009, pp. H53D-0965).
 # 18. 이인경, & 최상훈. (2010). 옥천지역 천부지하수의 지구화학적 특성 및 질산염 오염 특성. 자원환경지질, 43(1), 43-52.
 # 19. Ryu, J. S., Lee, K. S., & Chang, H. W. (2007). Hydrogeochemical and isotopic investigations of the Han River basin, South Korea. Journal of hydrology, 345(1-2), 50-60.
-# 20. Lee, K. S., Bong, Y. S., Lee, D., Kim, Y., & Kim, K. (2008). Tracing the sources of nitrate in the Han River watershed in Korea, using δ15N-NO3??? and δ18O-NO3??? values. Science of the Total Environment, 395(2-3), 117-124.
+# 20. Lee, K. S., Bong, Y. S., Lee, D., Kim, Y., & Kim, K. (2008). Tracing the sources of nitrate in the Han River watershed in Korea, using δ15N-NO3 and δ18O-NO3 values. Science of the Total Environment, 395(2-3), 117-124.
 # 21. Ryu, H. S., Kang, T. W., Kim, K., Nam, T. H., Han, Y. U., Kim, J., ... & Lee, J. H. (2021). Tracking nitrate sources in agricultural-urban watershed using dual stable isotope and Bayesian mixing model approach: Considering N transformation by Lagrangian sampling. Journal of environmental management, 300, 113693.
 # ------------------------------------------------------------------------------
 assign_source_universal <- function(row) {
