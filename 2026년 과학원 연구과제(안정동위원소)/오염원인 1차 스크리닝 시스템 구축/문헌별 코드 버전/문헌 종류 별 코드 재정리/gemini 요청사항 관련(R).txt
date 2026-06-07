@@ -1,0 +1,240 @@
+먼저 첨부드린 R framework에 대해 섹션 `3. 범용적 오염원 정밀 판별 엔진` 관련 코드를 업데이트해주시기 바랍니다. 
+단, 아래의 조건을 필히 따라주시기 바랍니다. (`해당 R code 발췌`에 있는 코드를 적절하게 수정해주세요!)
+
+1. 원래의 코드에 있는 분석과정과 방법론이 누락되지 않고 그대로 살아있도록 할 것
+2. 주석을 통해 해당 코드에 대한 방법론, 참고문헌 등에 대한 자세한 설명을 달 것(각 참고문헌에서 선정한 End-member도 같이 표기해주시기 바람)
+3. 업데이트된 코드 실행 시 오류가 나지 않게 할 것
+4. 기존의 판별 엔진을 바탕으로 추가로 도입되는 문헌(신규 추가 반영)에 있는 오염원 판별 정보가 추가 반영되도록 해주시기 바람
+5. 국내문헌 중 `환경기초조사사업` 관련 2편(5번 및 6번 문헌)의 보고서는 첨부된 pdf를 확인하시기 바람
+6. 아래에 제시된 모든 문헌에 대한 연구 내용이 빠짐없이 `범용적 오염원 정밀 판별 엔진`에 반영되도록 신경써주시기 바람
+7. 최종적인 오염원 판별 결과가 `자연 발생(판별 불가)` 등으로 나오는 경우가 최소화되도록 해주시기 바람
+8. 중요하게 살펴봐야 할 오염원이 우선적으로 선별될 수 있도록 코드를 업데이트 해주시기 바람
+
+-------------------------------------------------
+*** 참고문헌 목록 ***
+# * References
+
+# 국내 문헌 (case1)
+# 1. Koh, D., & Mayer, B. (2009, December). Source identification of nitrate in groundwater using stable isotopes and Cl/Br ratios in an agricultural area. In AGU Fall Meeting Abstracts (Vol. 2009, pp. H53D-0965).
+# 2. Ryu, J. S., Lee, K. S., & Chang, H. W. (2007). Hydrogeochemical and isotopic investigations of the Han River basin, South Korea. Journal of hydrology, 345(1-2), 50-60.
+# 3. Lee, K. S., Bong, Y. S., Lee, D., Kim, Y., & Kim, K. (2008). Tracing the sources of nitrate in the Han River watershed in Korea, using δ15N-NO3 and δ18O-NO3 values. Science of the Total Environment, 395(2-3), 117-124.
+# 4. Ryu, H. S., Kang, T. W., Kim, K., Nam, T. H., Han, Y. U., Kim, J., ... & Lee, J. H. (2021). Tracking nitrate sources in agricultural-urban watershed using dual stable isotope and Bayesian mixing model approach: Considering N transformation by Lagrangian sampling. Journal of environmental management, 300, 113693.
+# 5. 2024년 환경기초조사사업 최종보고서(동위원소 1차년도), 국립환경과학원 영산강물환경연구소 -> 신규 추가 반영
+# 6. 2025년 환경기초조사사업 최종보고서(동위원소 2차년도), 국립환경과학원 영산강물환경센터 -> 신규 추가 반영
+# 7. Hong, S., Han, Y., Kim, J., Lim, B. R., Park, S. Y., Choi, H., ... & Kim, M. S. (2023). A quantitative approach for identifying nitrogen sources in complex yeongsan river watershed, Republic of Korea, based on dual nitrogen isotope ratios and hydrological model. Water, 15(24), 4275. -> 신규 추가 반영
+# 8. Shin, W. J., Kim, I., Ryu, J. S., & Lee, K. S. (2019). Dual isotopes of nitrate in Korean fertilizers and their application for identifying nitrate sources. Episodes Journal of International Geoscience, 42(4), 313-319. -> 신규 추가 반영
+# 9. Kaown, D., Koh, D. C., Mayer, B., & Lee, K. K. (2009). Identification of nitrate and sulfate sources in groundwater using dual stable isotope approaches for an agricultural area with different land use (Chuncheon, mid-eastern Korea). Agriculture, Ecosystems & Environment, 132(3-4), 223-231. -> 신규 추가 반영
+# 10. Jung, H., Kim, Y. S., Yoo, J., Han, S. J., & Lee, J. (2023). Identification of nitrate sources in tap water sources across South Korea using multiple stable isotopes: Implications for land use and water management. Science of the Total Environment, 864, 161026. -> 신규 추가 반영
+# 11. Kim, H., Kaown, D., Mayer, B., Lee, J. Y., Hyun, Y., & Lee, K. K. (2015). Identifying the sources of nitrate contamination of groundwater in an agricultural area (Haean basin, Korea) using isotope and microbial community analyses. Science of the Total environment, 533, 566-575. -> 신규 추가 반영
+# 12. Shin, W. J., Jung, Y. Y., Choi, M., Choi, S. H., Choi, H. B., Lee, K. S., ... & Koh, D. C. (2023). National-scale investigation of dual nitrate isotopes and chloride ion in South Korea: Nitrate source apportionment for stream water. Environmental Research, 228, 115873. -> 신규 추가 반영
+# 13. Song, H., Lee, K. S., Jeong, N., Cho, S., Lee, D., Yun, C., & Shin, W. J. (2026). Nitrate source apportionments in the South Han River basin and its main tributaries using multi-isotopes and Bayesian approaches. Journal of Contaminant Hydrology, 104856. -> 신규 추가 반영
+
+# 국외 문헌 (case2)
+# 14. Kendall, C. (1998). Tracing nitrogen sources and cycling in catchments. In Isotope tracers in catchment hydrology (pp. 519-576). Elsevier.
+# 15. Xue, D., Botte, J., De Baets, B., Accoe, F., Nestler, A., Taylor, P., ... & Boeckx, P. (2009). Present limitations and future prospects of stable isotope methods for nitrate source identification in surface-and groundwater. Water research, 43(5), 1159-1170.
+# 16. Böttcher, J., Strebel, O., Voerkelius, S., & Schmidt, H. L. (1990). Using isotope fractionation of nitrate-nitrogen and nitrate-oxygen for evaluation of microbial denitrification in a sandy aquifer. Journal of hydrology, 114(3-4), 413-424.
+# 17. Aravena, R., Evans, M. L., & Cherry, J. A. (1993). Stable isotopes of oxygen and nitrogen in source identification of nitrate from septic systems. Groundwater, 31(2), 180-186.
+# 18. Mayer, B., Boyer, E. W., Goodale, C., Jaworski, N. A., Van Breemen, N., Howarth, R. W., ... & Paustian, K. (2002). Sources of nitrate in rivers draining sixteen watersheds in the northeastern US: Isotopic constraints. Biogeochemistry, 57(1), 171-197.
+# 19. Elliott, E. M., Kendall, C., Wankel, S. D., Burns, D. A., Boyer, E. W., Harlin, K., ... & Butler, T. J. (2007). Nitrogen isotopes as indicators of NOx source contributions to atmospheric nitrate deposition across the midwestern and northeastern United States. Environmental Science & Technology, 41(22), 7661-7667.
+# 20. Widory, D., Petelet-Giraud, E., Négrel, P., & Ladouche, B. (2005). Tracking the sources of nitrate in groundwater using coupled nitrogen and boron isotopes: a synthesis. Environmental Science & Technology, 39(2), 539-548.
+# 21. Panno, S. V., Hackley, K. C., Hwang, H. H., Greenberg, S. E., Krapac, I. G., Landsberger, S., & O'kelly, D. J. (2006). Characterization and identification of NaCl sources in ground water. Groundwater, 44(2), 176-187.
+# 22. Katz, B. G., Böhlke, J. K., & Hornsby, H. D. (2001). Timescales for nitrate contamination of spring waters, northern Florida, USA. Chemical Geology, 179(1-4), 167-186.
+# 23. Xue, Y., Song, J., Zhang, Y., Kong, F., Wen, M., & Zhang, G. (2016). Nitrate pollution and preliminary source identification of surface water in a Semi-Arid River Basin, using isotopic and hydrochemical approaches. Water, 8(8), 328.
+# 24. Gros, M., Petrović, M., & Barceló, D. (2007). Wastewater treatment plants as a pathway for aquatic contamination by pharmaceuticals in the Ebro river basin (northeast Spain). Environmental toxicology and chemistry, 26(8), 1553-1562.
+# 25. Minet, E., Coxon, C. E., Goodhue, R., Richards, K. G., Kalin, R. M., & Meier-Augenstein, W. (2012). Evaluating the utility of 15N and 18O isotope abundance analyses to identify nitrate sources: A soil zone study. Water research, 46(12), 3723-3736.
+# 26. Koba, K., Fang, Y., Mo, J., Zhang, W., Lu, X., Liu, L., ... & Senoo, K. (2012). The 15N natural abundance of the N lost from an N-saturated subtropical forest in southern China. Journal of Geophysical Research: Biogeosciences, 117(G2).
+# 27. Spalding, R. F., Hirsh, A. J., Exner, M. E., Little, N. A., & Kloppenborg, K. L. (2019). Applicability of the dual isotopes δ15N and δ18O to identify nitrate in groundwater beneath irrigated cropland. Journal of contaminant hydrology, 220, 128-135. -> 신규 추가 반영
+# 28. Ogrinc, N., Tamše, S., Zavadlav, S., Vrzel, J., & Jin, L. (2019). Evaluation of geochemical processes and nitrate pollution sources at the Ljubljansko polje aquifer (Slovenia): A stable isotope perspective. Science of the total environment, 646, 1588-1600. -> 신규 추가 반영
+# 29. Li, S. L., Liu, C. Q., Li, J., Xue, Z., Guan, J., Lang, Y., ... & Li, L. (2013). Evaluation of nitrate source in surface water of southwestern China based on stable isotopes. Environmental earth sciences, 68(1), 219-228. -> 신규 추가 반영
+# 30. Wassenaar, L. I. (1995). Evaluation of the origin and fate of nitrate in the Abbotsford Aquifer using the isotopes of 15N and 18O in NO3-. Applied geochemistry, 10(4), 391-405. -> 신규 추가 반영
+# 31. Mouassa, S., Moulla, A. S., Benhadj Tahar, A., Teffahi, M., Zaagane, M., Benyoucef, M., & Brahmia, N. (2020). Geochemical and isotopic characterization of groundwater in the alluvial aquifer of Guelma (north-eastern Algeria). Arabian Journal of Geosciences, 13(5), 218. -> 신규 추가 반영
+# 32. Chen, R., Hu, Q., Shen, W., Guo, J., Yang, L., Yuan, Q., ... & Wang, L. (2023). Identification of nitrate sources of groundwater and rivers in complex urban environments based on isotopic and hydro-chemical evidence. Science of the Total Environment, 871, 162026. -> 신규 추가 반영
+# 33. Ren, C., Zhang, Q., Wang, H., & Wang, Y. (2021). Identification of sources and transformations of nitrate in the intense human activity region of North China using a multi-isotope and Bayesian model. International Journal of Environmental Research and Public Health, 18(16), 8642. -> 신규 추가 반영
+# 34. Divers, M. T., Elliott, E. M., & Bain, D. J. (2014). Quantification of nitrate sources to an urban stream using dual nitrate isotopes. Environmental science & technology, 48(18), 10580-10587. -> 신규 추가 반영
+# 35. Wang, S., Li, H., Kang, T., Li, R., & Zhang, C. (2025). Resolving Nitrate Sources in Rivers Through Dual Isotope Analysis of δ15N and δ18O. Water, 17(23), 3370. -> 신규 추가 반영
+# 36. Mayer, B., Boyer, E. W., Goodale, C., Jaworski, N. A., Van Breemen, N., Howarth, R. W., ... & Paustian, K. (2002). Sources of nitrate in rivers draining sixteen watersheds in the northeastern US: Isotopic constraints. Biogeochemistry, 57(1), 171-197. -> 신규 추가 반영
+# 37. Wang, M., Lu, B., Wang, J., Zhang, H., Guo, L., & Lin, H. (2016). Using dual isotopes and a bayesian isotope mixing model to evaluate nitrate sources of surface water in a drinking water source watershed, East China. Water, 8(8), 355. -> 신규 추가 반영
+
+# 국내 문헌 + 국외 문헌 (case3) : 위의 문헌 모두 반영
+-------------------------------------------------
+
+
+-------------------------------------------------
+*** 해당 R code 발췌 ***
+# [Core Logic] 문헌 기반의 다중 지표 표준 판별 규칙 함수 (Ref 22, 23 고도화 업데이트 반영)
+assign_source_weighted <- function(row_list, lit_case = 3) {
+  # [방어적 코딩] 입력 데이터 타입 보장 (Factor나 String이 들어와도 안전하게 Numeric 변환)
+  n15 <- suppressWarnings(as.numeric(as.character(row_list$d15N)))
+  o18 <- suppressWarnings(as.numeric(as.character(row_list$d18O)))
+  cl  <- suppressWarnings(as.numeric(as.character(row_list$Cl)))
+  tp  <- suppressWarnings(as.numeric(as.character(row_list$TP)))
+  nh3 <- suppressWarnings(as.numeric(as.character(row_list$NH3N)))
+  no3 <- suppressWarnings(as.numeric(as.character(row_list$NO3N)))
+  toc <- suppressWarnings(as.numeric(as.character(row_list$TOC)))
+  chl <- suppressWarnings(as.numeric(as.character(row_list$Chla)))
+  ec  <- suppressWarnings(as.numeric(as.character(row_list$EC)))
+  
+  # 결측값 방어용 내부 함수 (조건식 NA 에러 완벽 차단)
+  safe_val <- function(val, default = -999) ifelse(is.na(val), default, val)
+  
+  # [Priority 0] 핵심 데이터 전면 결측 검사
+  if (is.na(n15) && is.na(cl) && is.na(no3) && is.na(toc) && is.na(tp)) return("결측-판정불가")
+  
+  # ----------------------------------------------------------------------------
+  # [가중치 매트릭스 설정]
+  # Case 1: 국내 문헌 단독 구동 (w_dom = 1.0, w_int = 0.0) 
+  # Case 2: 국외 문헌 단독 구동 (w_dom = 0.0, w_int = 1.0)
+  # Case 3: 하이브리드 융합 구동 (국내 특성 우선 반영 w_dom = 1.2, 글로벌 범용성 w_int = 0.8)
+  # ----------------------------------------------------------------------------
+  w_dom <- ifelse(lit_case == 1, 1.0, ifelse(lit_case == 2, 0.0, 1.2))
+  w_int <- ifelse(lit_case == 1, 0.0, ifelse(lit_case == 2, 1.0, 0.8))
+  
+  # 계층적 판별을 위한 우선순위 기본 점수 (Waterfall 효과를 가중치로 구현)
+  p_score <- c(P1 = 1000, P2 = 800, P3 = 600, P4 = 400, P5 = 200)
+  
+  # 점수 누적용 리스트 초기화 및 동적 할당 함수
+  scores <- list()
+  add_score <- function(name, score) {
+    if (score <= 0) return() # 가중치가 0인 문헌 조건(예: Case 1에서 국외 문헌)은 무시
+    if (is.null(scores[[name]])) scores[[name]] <<- 0
+    scores[[name]] <<- scores[[name]] + score
+  }
+  
+  # ---------------------------------------------------------
+  # [Priority 1] 외부 유입 및 기원 변형 (대기강하, 강우, 탈질 등)
+  # ---------------------------------------------------------
+  # [Ref 1, 6(Int), 16(Dom)] 대기 강하물 및 초기 강우
+  if (safe_val(o18) > 15.0) add_score("대기유입/초기강우", p_score["P1"] * (w_int + w_dom))
+  
+  # [Ref 22(Dom)] 대기강하물 (국립환경과학원 2024년 1차년도 로컬 동위원소 기준)
+  # 영산강/섬진강 수계 특이적 대기강하물 End-member 범위 반영 
+  if (safe_val(n15) >= -10.0 && safe_val(n15) <= 5.0 && safe_val(o18) >= 50.0) {
+    add_score("대기유입/초기강우", p_score["P1"] * (w_dom * 1.0))
+  }
+  
+  # [Ref 2, 3(Int), 21(Dom)] 미생물 탈질작용 (산소/질소 동위원소 동반 상승)
+  if (safe_val(n15) > 6.0 && safe_val(o18) > 3.0 && 
+      (safe_val(n15)/safe_val(o18) >= 1.0 && safe_val(n15)/safe_val(o18) <= 2.5)) {
+    add_score("탈질작용(기원변형)", p_score["P1"] * (w_int + w_dom))
+  }
+  
+  # ---------------------------------------------------------
+  # [Priority 2] 고위험 인위적 점오염 스크리닝 (산업폐수, 축산, 생활하수)
+  # ---------------------------------------------------------
+  # [Ref 9(Int), 20(Dom)] 산업/인위적 점오염
+  if (safe_val(n15) > 7.0 && (safe_val(ec) > 500 || safe_val(cl) > 100) && safe_val(toc) > 3.0) {
+    add_score("산업/인위적 점오염", p_score["P2"] * (w_int + w_dom))
+  }
+  
+  # [Ref 8(Int), 14, 17, 18(Dom)] 축산분뇨 직접유출 (기존 한국형 수계 중요 오염원 부스팅)
+  if (safe_val(n15) > 12.0 && (safe_val(cl) > 60 || safe_val(nh3) > 0.3)) {
+    add_score("축산분뇨 직접유출", p_score["P2"] * (w_int + w_dom * 1.5))
+  }
+  
+  # [Ref 23(Dom)] 축산계 (국립환경과학원 2025년 2차년도 수질 연계 복합 판별 기준)
+  # 중점하천 오염원 기여율 평가 기반의 축산계 정밀 분류 룰 
+  if (safe_val(n15) >= 11.0 && safe_val(cl) >= 30.0 && safe_val(tp) >= 0.1) {
+    add_score("축산분뇨 직접유출", p_score["P2"] * (w_dom * 1.0))
+  }
+  
+  # [Ref 4, 11(Int), 15(Dom)] 생활하수/정화조
+  if (safe_val(n15) > 7.0 && safe_val(n15) <= 12.0 && (safe_val(cl) > 40 || safe_val(tp) <= 0.3)) {
+    add_score("생활하수/처리수 영향", p_score["P2"] * (w_int + w_dom))
+  }
+  
+  # [Ref 23(Dom)] 생활계 (국립환경과학원 2025년 2차년도 수질 연계 복합 판별 기준)
+  # 분류식/합류식 하수관거 지역 특성을 반영한 생활계 구조적 룰셋 적용
+  if (safe_val(n15) >= 7.0 && safe_val(n15) < 11.0 && safe_val(cl) >= 40.0 && safe_val(toc) >= 4.0) {
+    add_score("생활하수/처리수 영향", p_score["P2"] * (w_dom * 1.0))
+  }
+  
+  # [Ref 22(Dom)] 가축분뇨/생활하수 유입 동위원소 공통 구간 (국립환경과학원 2024년 1차년도)
+  if (safe_val(n15) >= 8.0 && safe_val(n15) <= 22.0 && safe_val(o18) >= 0.0 && safe_val(o18) <= 15.0) {
+    # 분뇨와 하수가 혼재되는 구간이므로 양쪽에 점수를 균등 배분하여 앙상블 판별력 상승
+    add_score("축산분뇨 직접유출", p_score["P2"] * w_dom)
+    add_score("생활하수/처리수 영향", p_score["P2"] * w_dom)
+  }
+  
+  # ---------------------------------------------------------
+  # [Priority 3] 수계 내부 생태적 부하 (조류 증식, 퇴적물 용출)
+  # ---------------------------------------------------------
+  # [Ref 10(Int), 20(Dom)] 조류광합성 유래 내부생성 유기물
+  if (safe_val(chl) > 40.0 && safe_val(toc) > 4.5) {
+    add_score("조류증식(현장발생)", p_score["P3"] * (w_int + w_dom))
+  }
+  
+  # [Ref 20(Dom)] 정체수역 하부 퇴적물 용출 부하 (국내 문헌 단독 지표)
+  if (safe_val(toc) > 6.5 && safe_val(tp) > 0.1) {
+    add_score("내생부하(퇴적물용출)", p_score["P3"] * w_dom) 
+  }
+  
+  # ---------------------------------------------------------
+  # [Priority 4] 농경지 및 토양 비점오염
+  # ---------------------------------------------------------
+  # [Ref 1, 5, 12(Int), 19(Dom)] 화학비료 기반 농경지
+  if (safe_val(n15) < 4.0 && safe_val(no3) > 2.0 && safe_val(cl) < 30) {
+    add_score("화학비료 기반 농경지", p_score["P4"] * (w_int + w_dom))
+  }
+  
+  # [Ref 22(Dom)] 화학비료 (국립환경과학원 2024년 1차년도 로컬 동위원소 기준)
+  # 암모늄계 비료 하천 질산화 등을 고려한 영산강/섬진강 화학비료 고유 범위 매핑
+  if (safe_val(n15) >= -4.0 && safe_val(n15) <= 5.0 && safe_val(o18) >= 15.0 && safe_val(o18) <= 25.0) {
+    add_score("화학비료 기반 농경지", p_score["P4"] * (w_dom * 1.0))
+  }
+  
+  # [Ref 12, 13(Int), 14(Dom)] 퇴비 및 토양유기물 배후지
+  if (safe_val(n15) >= 4.0 && safe_val(n15) < 9.0) {
+    if (safe_val(cl) > 35 && safe_val(toc) > 4.0) {
+      add_score("유기질비료(퇴비) 영향", p_score["P4"] * (w_int + w_dom))
+    } else if (safe_val(toc) < 4.0 && safe_val(cl) < 20) {
+      add_score("토양유기물/야생동물배설물", p_score["P4"] * (w_int + w_dom))
+    }
+  }
+  
+  # [Ref 22(Dom)] 토양유기물 (국립환경과학원 2024년 1차년도 로컬 동위원소 기준)
+  # 토양/식생 기원의 특성을 가지는 구간 정립 적용
+  if (safe_val(n15) >= 1.0 && safe_val(n15) <= 8.0 && safe_val(o18) >= 0.0 && safe_val(o18) <= 12.0) {
+    add_score("토양유기물/야생동물배설물", p_score["P4"] * (w_dom * 1.0))
+  }
+  
+  # [Ref 23(Dom)] 토지계 비점오염 (국립환경과학원 2025년 2차년도 수질 연계 복합 판별 기준)
+  # 비점오염원(토지계) 기여율 분석 결과를 반영하여 동위원소와 TOC, TP의 상관성 기반 판별 룰 적용
+  if (safe_val(n15) >= 2.0 && safe_val(n15) <= 7.0 && (safe_val(tp) < 0.05 || safe_val(toc) >= 3.0)) {
+    add_score("토지계 비점오염(강우유출)", p_score["P4"] * (w_dom * 1.0))
+  }
+  
+  # ---------------------------------------------------------
+  # [Priority 5] Fallback (동위원소 미약/결측 시 보완 및 복합 오염 판정)
+  # ---------------------------------------------------------
+  # [Ref 7(Int)] 다중 오염원 혼합 추정 (국외 문헌 단독 지표)
+  if (!is.na(n15) && n15 > 7.0) add_score("복합오염(하수/분뇨 우세)", p_score["P5"] * w_int)
+  if (!is.na(n15) && n15 <= 7.0) add_score("복합오염(비점오염 우세)", p_score["P5"] * w_int)
+  
+  # 동위원소 NA인 상태에서도 주요 수질 항목 지시자가 강할 경우 하드캐리 판정 (국내외 공통 적용)
+  if (safe_val(cl) > 50 || safe_val(tp) > 0.1) add_score("복합오염(수화학적 점오염 징후)", p_score["P5"] * (w_int*0.5 + w_dom*0.5))
+  if (safe_val(no3) > 2.0) add_score("복합오염(수화학적 비점 징후)", p_score["P5"] * (w_int*0.5 + w_dom*0.5))
+  
+  # ---------------------------------------------------------
+  # 결과 산출 (점수 경합 및 최적 오염원 낙점)
+  # ---------------------------------------------------------
+  if (length(scores) == 0) return("자연배경/특이징후 없음")
+  
+  max_val <- max(unlist(scores))
+  if (max_val == 0) return("자연배경/특이징후 없음")
+  
+  # 최고 점수를 획득한 오염원 반환 (동점 시 Priority가 높은 오염원이 우선 낙점됨)
+  best_source <- names(scores)[which(unlist(scores) == max_val)[1]]
+  return(best_source)
+}
+
+# 데이터프레임 복제 및 Case 1, 2, 3 비교 분석용 동시 스크리닝
+imputed_data_df <- as.data.frame(imputed_data)
+
+# 연구팀 요청사항: 3가지 Case 결과물 동시 생성 (후속 비교 분석 및 논문화 작업용)
+imputed_data_df$Case1_Source <- apply(imputed_data_df, 1, function(r) assign_source_weighted(as.list(r), lit_case = 1))
+imputed_data_df$Case2_Source <- apply(imputed_data_df, 1, function(r) assign_source_weighted(as.list(r), lit_case = 2))
+imputed_data_df$Case3_Source <- apply(imputed_data_df, 1, function(r) assign_source_weighted(as.list(r), lit_case = 3))
+
+# 하위 기계학습(RF) 파이프라인에는 가장 고도화된 하이브리드 결과(Case 3)를 연결하여 호환성 유지
+imputed_data_df$Initial_Rule_Source <- imputed_data_df$Case3_Source
+-------------------------------------------------
